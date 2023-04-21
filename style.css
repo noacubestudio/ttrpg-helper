@@ -1,10 +1,11 @@
 body {
-  background-color: #212121;
+  background-color: #000000;
   color: #fff;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   margin: 0;
   touch-action: pan-y;
   overflow-x: hidden;
+  font-optical-sizing: auto;
 }
 
 .container {
@@ -27,7 +28,7 @@ body {
   border-radius: 8px;
   color: #000;
   font-size: 15px;
-  padding: 6px 20px;
+  padding: 0px 20px;
   font-weight: 600;
 }
 
@@ -36,7 +37,7 @@ body {
   border: none;
   color: #fff;
   font-size: 14px;
-  padding: 6px;
+  padding: 2px 6px;
 }
 
 /* Tabs styling */
@@ -44,14 +45,12 @@ body {
   overflow-x: auto;
   white-space: nowrap;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
   height: 58px;
-  background-color: #444;
+  background-color: #333;
   color: white;
   font-size: 15px;
   touch-action: pan-y;
@@ -61,14 +60,18 @@ body {
   border: none;
   background-color: transparent;
   color: white;
-  padding: 15px 20px;
+  flex-grow: 1;
+  padding: 18px 20px;
+  text-align: center;
   font-size: 15px;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 }
 
 #tabs button.active {
   border-top: 2px solid white;
+  background-color: #444;
 }
 
 #tabs button:hover {
@@ -86,11 +89,14 @@ h1 {
 }
 
 h2 {
-  font-family: 'Courier New', Courier, monospace;
+  color: #D0A080;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
   font-size: 22px;
   margin: 0;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 20px;
+  padding-bottom: 0px;
 }
 
 label {
@@ -115,7 +121,7 @@ label::after {
 }
 
 textarea {
-  background-color: #333;
+  background-color: #222;
   border: 1px solid #ffffff30;
   border-radius: 8px;
   color: #fff;
@@ -133,7 +139,7 @@ textarea {
 
 input[type="text"],
 input[type="number"] {
-  background-color: #333;
+  background-color: #222;
   border: 1px solid #ffffff30;
   border-radius: 8px;
   color: #fff;
@@ -168,24 +174,24 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .stepper-input input[type="number"] {
-  background-color: #333;
+  background-color: #222;
   border: 1px solid #ffffff30;
   border-radius: 8px;
   color: #fff;
   font-size: 18px;
   padding: 8px 14px;
-  width: calc(100% - 110px);
+  width: calc(100% - 104px);
   vertical-align: middle;
   margin-bottom: 0px;
 }
 
 .stepper-input button {
-  background-color: #555;
+  background-color: #444;
   border: 1px solid #ffffff30;
   border-radius: 8px;
   color: #fff;
-  font-size: 18px;
-  padding: 8px 14px;
+  font-size: 24px;
+  padding: 4px 14px;
   width: 50px;
   cursor: pointer;
   vertical-align: middle;
@@ -197,6 +203,11 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .stepper-input button:last-of-type {
   right: 0;
+}
+
+.stepper-input button.active, .stepper-input button:hover {
+  background-color: #444;
+  border: 1px solid #ffffff20;
 }
 
 @media screen and (min-width: 768px) {

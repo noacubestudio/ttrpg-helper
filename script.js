@@ -191,9 +191,14 @@ function loadCharacter(data) {
     // Cleat the tabs container
     tabsContainer.innerHTML = "";
 
+    // Calculate tab width based on number
+    const tabCount = Object.keys(characterData).length;
+    const tabWidth = 100 / tabCount;
+
     // Generate the tabs
     for (const category in characterData) {
         const tab = document.createElement("button");
+        tab.style.width = `${tabWidth}%`;
         tab.textContent = category;
         tab.setAttribute("class", "tab");
         tab.setAttribute("id", category);

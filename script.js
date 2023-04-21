@@ -5,8 +5,8 @@ let currentCategory = undefined;
 let characterData = undefined;
 
 
-// Load the data from example character
-fetch("example.json")
+// Load the data from empty 5e template
+fetch("emptyTemplateDND5e.json")
 .then(response => response.json())
 .then(data => {
     loadCharacter(data);

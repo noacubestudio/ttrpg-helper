@@ -165,9 +165,9 @@ fileInput.addEventListener("change", (event) => {
 
 const saveButton = document.getElementById("save-button");
 saveButton.addEventListener("click", () => {
-    const fileName = (characterData.General !== undefined) ? String(
-        characterData.General.characterName.input + 
-        characterData.General.level.input
+    const fileName = (characterData.BASE !== undefined) ? String(
+        characterData.BASE.characterName.input + 
+        characterData.BASE.level.input
     ) : "character";
 
     const data = characterData;

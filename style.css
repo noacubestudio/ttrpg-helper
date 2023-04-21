@@ -1,0 +1,209 @@
+body {
+  background-color: #212121;
+  color: #fff;
+  font-family: "San Francisco", Arial, sans-serif;
+  margin: 0;
+  touch-action: pan-y;
+  overflow-x: hidden;
+}
+
+/* Save and load button styling */
+#file {
+  overflow-x: auto;
+  white-space: nowrap;
+  display: flex;
+  width: 100%;
+  column-gap: 10px;
+  margin: 5px 16px;
+}
+
+#save-button {
+  background-color: #555;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  padding: 10px 20px;
+  font-weight: 700;
+}
+
+#file-input {
+  background-color: #333;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 11px;
+  padding: 10px;
+}
+
+/* Tabs styling */
+#tabs {
+  overflow-x: auto;
+  white-space: nowrap;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 54px;
+  background-color: #444;
+  color: white;
+  font-size: 15px;
+  touch-action: pan-y;
+}
+
+#tabs button {
+  border: none;
+  background-color: transparent;
+  color: white;
+  padding: 15px 20px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+#tabs button.active {
+  border-top: 2px solid white;
+}
+
+#tabs button:hover {
+  border-top: 2px solid white;
+}
+
+/* Inputs styling */
+h1 {
+  font-size: 14px;
+  margin: 0;
+  padding-top: 0;
+  padding-bottom: 10px;
+  color: gray;
+  font-weight: 400;
+}
+
+h2 {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 22px;
+  margin: 0;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+label {
+  color: lightgray;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 5px;
+  line-height: 1.5;
+}
+
+label::after {
+  content: "\a";
+  white-space: pre;
+}
+
+#inputs {
+  padding: 8px 16px 120px 16px;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 120px;
+}
+
+textarea {
+  background-color: #333;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 18px;
+  margin-bottom: 8px;
+  padding: 8px 14px;
+  width: 100%;
+  display: inline-block;
+  vertical-align: middle;
+
+  overflow: hidden;
+  resize: none;
+  min-height: 50px;
+}
+
+input[type="text"],
+input[type="number"] {
+  background-color: #333;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 18px;
+  margin-bottom: 8px;
+  padding: 8px 14px;
+  width: 100%;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+input[type="number"] {
+  /* text-align: right; */
+  font-variant-numeric: tabular-nums;
+}
+
+/* Remove spinner on iOS */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Stepper input */
+.stepper-input {
+  width: 100%;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.stepper-input input[type="number"] {
+  background-color: #333;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 18px;
+  padding: 8px 14px;
+  width: calc(100% - 110px);
+  vertical-align: middle;
+  margin-bottom: 0px;
+}
+
+.stepper-input button {
+  background-color: #555;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 18px;
+  padding: 8px 14px;
+  width: 50px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.stepper-input button:first-of-type {
+  left: 0;
+}
+
+.stepper-input button:last-of-type {
+  right: 0;
+}
+
+@media screen and (min-width: 768px) {
+  .container {
+    max-width: 768px;
+    margin: 0 auto;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+  }
+} 

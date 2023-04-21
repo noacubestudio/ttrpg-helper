@@ -195,9 +195,12 @@ function loadCharacter(data) {
     for (const category in characterData) {
         const tab = document.createElement("button");
         tab.textContent = category;
+        tab.setAttribute("class", "tab");
+        tab.setAttribute("id", category);
         tab.addEventListener("click", () => {
             currentCategory = category;
             showInputs(category, characterData[category]);
+            setActiveTab(category);
             window.scrollTo(0, 0);
         });
         tabsContainer.appendChild(tab);
@@ -207,4 +210,17 @@ function loadCharacter(data) {
     const firstCategory = Object.keys(characterData)[0];
     currentCategory = firstCategory;
     showInputs(firstCategory, characterData[firstCategory]);
+    setActiveTab(firstCategory);
+}
+
+function setActiveTab(tabId) {
+    // Get all tab elements
+    const tabs = document.querySelectorAll('.tab');
+  
+    // Remove active class from all tabs
+    tabs.forEach(tab => tab.classList.remove('active'));
+  
+    // Add active class to selected tab
+    const selectedTab = document.getElementById(tabId);
+    selectedTab.classList.add('active');
 }

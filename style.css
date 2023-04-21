@@ -7,6 +7,10 @@ body {
   overflow-x: hidden;
 }
 
+.container {
+  overflow-x: hidden;
+}
+
 /* Save and load button styling */
 #file {
   overflow-x: auto;
@@ -22,18 +26,17 @@ body {
   border: none;
   border-radius: 8px;
   color: #000;
-  font-size: 14px;
-  padding: 10px 20px;
+  font-size: 15px;
+  padding: 6px 20px;
   font-weight: 600;
 }
 
 #file-input {
-  background-color: #888;
+  background-color: transparent;
   border: none;
-  border-radius: 50px;
-  color: #000;
-  font-size: 11px;
-  padding: 10px;
+  color: #fff;
+  font-size: 14px;
+  padding: 6px;
 }
 
 /* Tabs styling */
@@ -91,11 +94,12 @@ h2 {
 }
 
 label {
-  color: lightgray;
+  color: #b8b8b8;
   font-size: 16px;
   font-weight: 500;
-  margin-bottom: 5px;
-  line-height: 1.5;
+  margin-bottom: 94px;
+  margin-left: 14px;
+  line-height: 1.8;
 }
 
 label::after {
@@ -112,11 +116,11 @@ label::after {
 
 textarea {
   background-color: #333;
-  border: none;
+  border: 1px solid #ffffff30;
   border-radius: 8px;
   color: #fff;
   font-size: 18px;
-  margin-bottom: 8px;
+  margin-bottom: 2px;
   padding: 8px 14px;
   width: 100%;
   display: inline-block;
@@ -130,11 +134,11 @@ textarea {
 input[type="text"],
 input[type="number"] {
   background-color: #333;
-  border: none;
+  border: 1px solid #ffffff30;
   border-radius: 8px;
   color: #fff;
   font-size: 18px;
-  margin-bottom: 8px;
+  margin-bottom: 2px;
   padding: 8px 14px;
   width: 100%;
   display: inline-block;
@@ -160,12 +164,12 @@ input[type="number"]::-webkit-outer-spin-button {
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 2px;
 }
 
 .stepper-input input[type="number"] {
   background-color: #333;
-  border: none;
+  border: 1px solid #ffffff30;
   border-radius: 8px;
   color: #fff;
   font-size: 18px;
@@ -177,7 +181,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .stepper-input button {
   background-color: #555;
-  border: none;
+  border: 1px solid #ffffff30;
   border-radius: 8px;
   color: #fff;
   font-size: 18px;

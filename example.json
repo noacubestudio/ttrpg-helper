@@ -14,7 +14,7 @@
         },
         "level": {
             "label": "Level",
-            "input": 6,
+            "input": 7,
             "view": "stepper",
             "viewProperties": {
                 "minValue": 1,
@@ -71,7 +71,7 @@
         },
         "notes": {
             "label": "Notes",
-            "input": "TODO: 1 lvl1 Spell mehr",
+            "input": "TODO: 1 lvl1 Spell mehr\nDev\nModifier fehlen\nnat20/nat1 erwÃ¤hnen, surprise attack\ndisable spell check\nLines count calculation is off\nHit dice are regained at long rest, \nnot short rest\nFalken infos\nNeed constant saving somehow",
             "view": "textInput"
         }
     },
@@ -381,7 +381,7 @@
             "input": "Light/ Medium Armor/ Shield\nSimple/ Martial Weapons",
             "view": "textInput"
         }
-    }, 
+    },
     "STAT": {
         "stats": {
             "label": "Stats",
@@ -447,7 +447,7 @@
         },
         "currentHitPoints": {
             "label": "Current Hit Points",
-            "input": 42,
+            "input": 1,
             "view": "stepper",
             "viewProperties": {
                 "minValue": 0,
@@ -478,7 +478,7 @@
         },
         "currentHitDice": {
             "label": "Hit Dice (Regain </2 in Short Rest)",
-            "input": 6,
+            "input": 4,
             "view": "stepper",
             "viewProperties": {
                 "minValue": 0,
@@ -518,17 +518,17 @@
             "view": "headline"
         },
         "attack1": {
-            "input": "Longbow\nAttack: d20+10\nDamage: d8+1+2\nType: Piercing",
+            "input": "Longbow+1\nAttack: d20+10\nDamage: d8+7 (1+2archery+4dex)\nType: Piercing, Range 150/600 ft.",
             "view": "textInput"
         },
         "attack2": {
             "label": "",
-            "input": "Magic Dagger\nAttack: d20+7\nDamage: d4+1\nType: Piercing/ Light",
+            "input": "Dagger\nAttack: d20+7\nDamage: d4+4 (dex)\nType: Piercing/ Light",
             "view": "textInput"
         },
         "attack3": {
             "label": "",
-            "input": "Kurzschwert\nAttack: d20+7\nDamage: d6\nType: Piercing/ Light",
+            "input": "Kurzschwert\nAttack: d20+7\nDamage: d6+4 (dex)\nType: Piercing/ Light",
             "view": "textInput"
         },
         "attack4": {
@@ -538,7 +538,7 @@
         },
         "otherActions": {
             "label": "Other actions",
-            "input": "",
+            "input": "Remember extra attack\nDual wield (ist bonus, offhand mit \nnachteil, extraattack ohne Bonus)",
             "view": "textInput"
         },
         "ammunition": {
@@ -547,7 +547,7 @@
         },
         "activeArrows": {
             "label": "Arrows in quiver/ storage",
-            "input": 6,
+            "input": 3,
             "view": "stepper",
             "viewProperties": {
                 "minValue": 0,
@@ -555,7 +555,7 @@
             }
         },
         "storedArrows": {
-            "input": 108,
+            "input": 78,
             "view": "stepper",
             "viewProperties": {
                 "minValue": 0,
@@ -564,7 +564,7 @@
         },
         "activeArrows1": {
             "label": "Arrows (+1) in quiver/ storage",
-            "input": 5,
+            "input": 3,
             "view": "stepper",
             "viewProperties": {
                 "minValue": 0,
@@ -651,7 +651,7 @@
             }
         },
         "slotsExpended1": {
-            "input": 2,
+            "input": 4,
             "view": "stepper",
             "viewProperties": {
                 "minValue": 0,
@@ -677,7 +677,7 @@
             }
         },
         "slotsExpended2": {
-            "input": 0,
+            "input": 2,
             "view": "stepper",
             "viewProperties": {
                 "minValue": 0,
@@ -785,12 +785,12 @@
         },
         "goldPieces": {
             "label": "Gold Pieces (1=10 Silver)",
-            "input": 384,
+            "input": 584,
             "view": "intInput"
         },
         "platinumPieces": {
             "label": "Platinum Pieces (1=10 Gold)",
-            "input": 100,
+            "input": 125,
             "view": "intInput"
         }
     }

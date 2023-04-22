@@ -38,9 +38,8 @@ function showInputs(category, categoryData) {
                 input = document.createElement("textarea");
                 input.setAttribute("type", "text");
                 input.setAttribute("id", field);
+                input.setAttribute("rows", "1");
                 input.value = fieldData.input;
-                const newLineCount = (fieldData.input.match(/\n/g) || []).length;
-                input.style.height = `${(newLineCount+1.4)*30}px`;
                 input.addEventListener("input", () => {
                     newValue = input.value;
                     updateField(fieldData, newValue);
@@ -132,6 +131,11 @@ function showInputs(category, categoryData) {
             container.appendChild(input);
         }
         inputsContainer.appendChild(container);
+
+        // modify height of text area based on lines
+        if (input !== undefined && input.tagName === "TEXTAREA") {
+            input.style.height = `${input.scrollHeight}px`;
+        }
     }
 }
 

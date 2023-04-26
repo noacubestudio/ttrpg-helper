@@ -113,11 +113,32 @@ label::after {
   white-space: pre;
 }
 
+p {
+  margin: 4px 0px 8px;
+  font-size: 13px;
+
+  color: #D0A080;
+  font-weight: 400;
+}
+
 #inputs {
-  padding: 8px 16px 120px 16px;
+  padding: 8px 10px 120px 10px;
   display: flex;
   flex-direction: column;
   padding-bottom: 120px;
+}
+
+/* multiple containers for fields and labels can exist on one row*/
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.field-container:not(.full) {
+  flex-basis: 49%; /* Each field container takes up 48% of the available width */
+}
+.full {
+  flex-basis: 100%;
 }
 
 textarea {
@@ -144,7 +165,7 @@ input[type="number"] {
   color: #fff;
   font-size: 16px;
   margin-bottom: 2px;
-  padding: 8px 14px 12px;
+  padding: 8px 14px 8px;
   width: 100%;
   display: inline-block;
   vertical-align: middle;
@@ -180,20 +201,21 @@ input[type="number"]::-webkit-outer-spin-button {
   color: #fff;
   font-size: 16px;
   padding: 8px 14px;
-  width: calc(100% - 104px);
+  width: calc(100% - 88px);
   vertical-align: middle;
   margin-bottom: 0px;
 }
 
 .stepper-input button {
-  background-color: #444;
-  border: 1px solid #ffffff30;
+  background-color: #E0605040;
+  border: 1px solid #E0605040;
   border-radius: 8px;
-  color: #fff;
+  color: #E06050;
   font-size: 24px;
-  padding: 2px 14px;
-  width: 50px;
+  padding: 1px 0px 3px;
+  width: 42px;
   cursor: pointer;
+  text-align: center;
   vertical-align: middle;
 }
 
@@ -206,8 +228,8 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .stepper-input button.active, .stepper-input button:hover {
-  background-color: #444;
-  border: 1px solid #ffffff20;
+  background-color: #E0605080;
+  border: 1px solid #E0605040;
 }
 
 @media screen and (min-width: 768px) {

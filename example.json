@@ -38,6 +38,15 @@
             "input": 14000,
             "view": "intInput"
         },
+        "inspiration": {
+            "label": "Inspiration",
+            "input": 0,
+            "view": "stepper",
+            "viewProperties": {
+                "minValue": 0,
+                "maxValue": 20
+            }
+        },
         "personality": {
             "label": "Personality",
             "input": "(Traits, Ideals, Bonds, Flaws)",
@@ -61,17 +70,23 @@
             "input": "Dark Vision\nFey Ancestry\nTrance\nMask of the wild\nFavorite Enemies: Dragons, Beasts\n Natural Explorer: Forest, Mountains\nArchery (+2atk)\nPrimeval Awareness: 1min/slot, detect presence in 1 mile\nBeastmaster\nExtra Attack\nHide in plain sight",
             "view": "textInput"
         },
+        "animalStatblocks": {
+            "label": "Animal Stat Blocks",
+            "input": "",
+            "view": "textInput"
+        },
         "player": {
             "label": "Player",
             "view": "headline"
         },
         "playerName": {
             "label": "Player Name",
+            "width": "full",
             "input": "Noa"
         },
         "notes": {
             "label": "Notes",
-            "input": "TODO: 1 lvl1 Spell mehr\nDev\nModifier fehlen\nnat20/nat1 erwÃ¤hnen, surprise attack\ndisable spell check\nLines count calculation is off\nHit dice are regained at long rest, \nnot short rest\nFalken infos\nNeed constant saving somehow",
+            "input": "TODO: Character needs another lvl1 spell\nAdd constant saving somehow",
             "view": "textInput"
         }
     },
@@ -133,6 +148,14 @@
                 "minValue": 1,
                 "maxValue": 20
             }
+        },
+        "abilityModifiers": {
+            "label": "Ability Modifiers",
+            "view": "headline"
+        },
+        "abilityModifierInfo": {
+            "label": "Modifier = Ability Score - 10, /2 (round down)",
+            "view": "info"
         },
         "savingThrows": {
             "label": "Saving Throws",
@@ -387,15 +410,6 @@
             "label": "Stats",
             "view": "headline"
         },
-        "inspiration": {
-            "label": "Inspiration",
-            "input": 0,
-            "view": "stepper",
-            "viewProperties": {
-                "minValue": 0,
-                "maxValue": 20
-            }
-        },
         "proficiencyBonus": {
             "label": "Proficiency Bonus +",
             "input": 3,
@@ -440,6 +454,7 @@
             "label": "Maximum Hit Points",
             "input": 53,
             "view": "stepper",
+            "width": "full",
             "viewProperties": {
                 "minValue": 1,
                 "maxValue": 999
@@ -467,6 +482,10 @@
             "label": "Hit Dice",
             "view": "headline"
         },
+        "hitDiceInfo": {
+            "label": "Add Constitution Modifier to roll. Regain <half the total after Long Rest.",
+            "view": "info"
+        },
         "totalHitDice": {
             "label": "Total Hit Dice",
             "input": 6,
@@ -477,7 +496,7 @@
             }
         },
         "currentHitDice": {
-            "label": "Hit Dice (Regain </2 in Short Rest)",
+            "label": "Current Hit Dice",
             "input": 4,
             "view": "stepper",
             "viewProperties": {
@@ -486,7 +505,7 @@
             }
         },
         "hitDieSides": {
-            "label": "Roll Hit Dice (+Constitution Modifier)",
+            "label": "Roll with",
             "input": "d10"
         },
         "deathSaves": {
@@ -517,6 +536,10 @@
             "label": "Attacks",
             "view": "headline"
         },
+        "attackInfo": {
+            "label": "In any order during your turn: Move, Action, Bonus\u00A0Action. Actions include: Attack (+Extra\u00A0Attack?), Spell, Dash (2x\u00A0Speed), Disengage, Help, Hide, Ready.",
+            "view": "info"
+        },
         "attack1": {
             "input": "Longbow+1\nAttack: d20+10\nDamage: d8+7 (1+2archery+4dex)\nType: Piercing, Range 150/600 ft.",
             "view": "textInput"
@@ -537,7 +560,7 @@
             "view": "textInput"
         },
         "otherActions": {
-            "label": "Other actions",
+            "label": "Notes",
             "input": "Remember extra attack\nDual wield (ist bonus, offhand mit \nnachteil, extraattack ohne Bonus)",
             "view": "textInput"
         },
@@ -546,7 +569,7 @@
             "view": "headline"
         },
         "activeArrows": {
-            "label": "Arrows in quiver/ storage",
+            "label": "Arrows in quiver",
             "input": 3,
             "view": "stepper",
             "viewProperties": {
@@ -555,6 +578,7 @@
             }
         },
         "storedArrows": {
+            "label": "Arrows in storage",
             "input": 78,
             "view": "stepper",
             "viewProperties": {
@@ -563,7 +587,7 @@
             }
         },
         "activeArrows1": {
-            "label": "Arrows (+1) in quiver/ storage",
+            "label": "Arrows (+1) in quiver",
             "input": 3,
             "view": "stepper",
             "viewProperties": {
@@ -572,6 +596,7 @@
             }
         },
         "storedArrows1": {
+            "label": "Arrows (+1) in storage",
             "input": 15,
             "view": "stepper",
             "viewProperties": {
@@ -610,6 +635,10 @@
             "label": "Magic",
             "view": "headline"
         },
+        "magicInfo": {
+            "label": "DC = Spellcasting Ability Modifier + Proficiency bonus + 8",
+            "view": "info"
+        },
         "spellcastingAbility": {
             "label": "Spellcasting Ability",
             "input": "Wisdom"
@@ -642,7 +671,7 @@
             "view": "headline"
         },
         "slotsTotal1": {
-            "label": "Slots total/ expended",
+            "label": "Slots total",
             "input": 4,
             "view": "stepper",
             "viewProperties": {
@@ -651,6 +680,7 @@
             }
         },
         "slotsExpended1": {
+            "label": "Slots expended",
             "input": 4,
             "view": "stepper",
             "viewProperties": {
@@ -668,7 +698,7 @@
             "view": "headline"
         },
         "slotsTotal2": {
-            "label": "Slots total/ expended",
+            "label": "Slots total",
             "input": 3,
             "view": "stepper",
             "viewProperties": {
@@ -677,6 +707,7 @@
             }
         },
         "slotsExpended2": {
+            "label": "Slots expended",
             "input": 2,
             "view": "stepper",
             "viewProperties": {
@@ -694,7 +725,7 @@
             "view": "headline"
         },
         "slotsTotal3": {
-            "label": "Slots total/ expended",
+            "label": "Slots total",
             "input": 0,
             "view": "stepper",
             "viewProperties": {
@@ -703,6 +734,7 @@
             }
         },
         "slotsExpended3": {
+            "label": "Slots expended",
             "input": 0,
             "view": "stepper",
             "viewProperties": {
@@ -750,6 +782,11 @@
             "input": "Explorer Pack\nStaff\nHunting Trap\nRacoon Tail\nTotem (for Spellcasting)\nHarp",
             "view": "textInput"
         },
+        "otherResources": {
+            "label": "Other Resources",
+            "input": "5 Torches",
+            "view": "textInput"
+        },
         "rations": {
             "label": "Rations (1 Day)",
             "input": 12,
@@ -759,14 +796,13 @@
                 "maxValue": 99
             }
         },
-        "otherResources": {
-            "label": "Other Resources",
-            "input": "5 Torches",
-            "view": "textInput"
-        },
         "treasure": {
             "label": "Treasure",
             "view": "headline"
+        },
+        "treasureInfo": {
+            "label": "1\u00A0Platinum = 10\u00A0Gold = 20\u00A0Electrum = 100\u00A0Silver = 1000\u00A0Copper",
+            "view": "info"
         },
         "copperPieces": {
             "label": "Copper Pieces",
@@ -774,22 +810,22 @@
             "view": "intInput"
         },
         "silverPieces": {
-            "label": "Silver Pieces (1=10 Copper)",
+            "label": "Silver Pieces",
             "input": 3900,
             "view": "intInput"
         },
         "electrumPieces": {
-            "label": "Electrum Pieces (1=5 Silver)",
+            "label": "Electrum Pieces",
             "input": 0,
             "view": "intInput"
         },
         "goldPieces": {
-            "label": "Gold Pieces (1=10 Silver)",
+            "label": "Gold Pieces",
             "input": 584,
             "view": "intInput"
         },
         "platinumPieces": {
-            "label": "Platinum Pieces (1=10 Gold)",
+            "label": "Platinum Pieces",
             "input": 125,
             "view": "intInput"
         }

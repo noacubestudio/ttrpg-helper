@@ -23,22 +23,43 @@ function showInputs(category, categoryData) {
     // header.textContent = category;
     // inputsContainer.appendChild(header);
 
+
+    // Multiple items can share a row
+    let currentRow = null;
+    let remainingWidth = 2;
   
     // Generate the inputs for each field in the category
     for (const field in categoryData) {
         const fieldData = categoryData[field];
-        const labelType = (fieldData.view === "headline") ? "h2" : "label";
+        const labelType = (fieldData.view === "headline") ? "h2" : ((fieldData.view === "info") ? "p" : "label");
         const label = document.createElement(labelType);
         label.textContent = fieldData.label;
         label.setAttribute("for", field);
-    
+        if (fieldData.view === "info") label.classList.add('info');
+
+        // Create a new row for full width elements
+        const isFullWidth = (fieldData.width === 'full' 
+            || fieldData.view === "headline" 
+            || fieldData.view === "textInput"
+            || fieldData.view === "info");
+
+        if (isFullWidth) {
+            currentRow = document.createElement('div');
+            currentRow.classList.add('row');
+            inputsContainer.appendChild(currentRow);
+            remainingWidth = 2;
+        }
+
+        // Create one element
         let input;
+
         switch (fieldData.view) {
             case "textInput":
                 input = document.createElement("textarea");
                 input.setAttribute("type", "text");
                 input.setAttribute("id", field);
                 input.setAttribute("rows", "1");
+                input.setAttribute("autocorrect", "off");
                 input.value = fieldData.input;
                 input.addEventListener("input", () => {
                     newValue = input.value;
@@ -111,26 +132,46 @@ function showInputs(category, categoryData) {
                 input.appendChild(incButton);
                 break;
             case "headline":
+            case "info":
                 break;
             default:
                 input = document.createElement("input");
                 input.setAttribute("type", "text");
                 input.setAttribute("id", field);
+                input.setAttribute("autocorrect", "off");
                 input.value = fieldData.input;
                 input.addEventListener("input", () => {
                     newValue = input.value;
                     updateField(fieldData, newValue);
                 });
         }
-    
+
+        // add the container for one field to the row
+        if (!isFullWidth) {
+            // Create a new row if the current one is full
+            if (!currentRow || remainingWidth <= 0) {
+                currentRow = document.createElement('div');
+                currentRow.classList.add('row');
+                inputsContainer.appendChild(currentRow);
+                remainingWidth = 2;
+            }
+        }
+        // add to row
+        // make the input and label in one element div
         const container = document.createElement("div");
+        container.classList.add('field-container');
         if (label.textContent !== undefined && label.textContent.length > 0) {
             container.appendChild(label);
         }
         if (input !== undefined) {
             container.appendChild(input);
         }
-        inputsContainer.appendChild(container);
+        currentRow.appendChild(container);
+        if (isFullWidth) {
+            container.classList.add('full');
+            remainingWidth-= 2;
+        } else remainingWidth--;
+
 
         // modify height of text area based on lines
         if (input !== undefined && input.tagName === "TEXTAREA") {

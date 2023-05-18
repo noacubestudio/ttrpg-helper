@@ -3,6 +3,8 @@ const inputsContainer = document.getElementById("inputs");
 
 let currentCategory = undefined;
 let characterData = undefined;
+let isTabletSized = window.matchMedia(`(min-width: ${768}px)`).matches;
+let rowCount = (isTabletSized) ? 4 : 2;
 
 
 // Load the data from empty 5e template
@@ -11,7 +13,6 @@ fetch("emptyTemplateDND5e.json")
 .then(data => {
     loadCharacter(data);
 });
-
 
 // Generate the input fields for a given category
 function showInputs(category, categoryData) {
@@ -26,11 +27,15 @@ function showInputs(category, categoryData) {
 
     // Multiple items can share a row
     let currentRow = null;
-    let remainingWidth = 2;
+    let remainingWidth = rowCount;
+
+    let displayItems = Object.assign({}, categoryData);
+    // Add empty full row at the end
+    displayItems.endSpacer = {view: "info", width: 'full'};
   
     // Generate the inputs for each field in the category
-    for (const field in categoryData) {
-        const fieldData = categoryData[field];
+    for (const field in displayItems) {
+        const fieldData = displayItems[field];
         const labelType = (fieldData.view === "headline") ? "h2" : ((fieldData.view === "info") ? "p" : "label");
         const label = document.createElement(labelType);
         label.textContent = fieldData.label;
@@ -44,10 +49,20 @@ function showInputs(category, categoryData) {
             || fieldData.view === "info");
 
         if (isFullWidth) {
+            // fill existing row with spacers
+            if (currentRow != null && currentRow.childElementCount < rowCount && currentRow.querySelector('.full') === null) {
+                for (let i = rowCount - currentRow.childElementCount; i > 0; i--) {
+                    const spacer = document.createElement("div");
+                    spacer.classList.add('spacer');
+                    spacer.classList.add('field-container');
+                    currentRow.appendChild(spacer);
+                }
+            }
+
             currentRow = document.createElement('div');
             currentRow.classList.add('row');
             inputsContainer.appendChild(currentRow);
-            remainingWidth = 2;
+            remainingWidth = rowCount;
         }
 
         // Create one element
@@ -148,12 +163,13 @@ function showInputs(category, categoryData) {
 
         // add the container for one field to the row
         if (!isFullWidth) {
-            // Create a new row if the current one is full
+            // if the current one is full
             if (!currentRow || remainingWidth <= 0) {
+                // Create a new row 
                 currentRow = document.createElement('div');
                 currentRow.classList.add('row');
                 inputsContainer.appendChild(currentRow);
-                remainingWidth = 2;
+                remainingWidth = rowCount;
             }
         }
         // add to row
@@ -169,7 +185,7 @@ function showInputs(category, categoryData) {
         currentRow.appendChild(container);
         if (isFullWidth) {
             container.classList.add('full');
-            remainingWidth-= 2;
+            remainingWidth-= rowCount;
         } else remainingWidth--;
 
 

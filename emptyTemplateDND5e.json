@@ -454,7 +454,6 @@
       "label": "Maximum Hit Points",
       "input": null,
       "view": "stepper",
-      "width": "full",
       "viewProperties": {
         "minValue": 1,
         "maxValue": 999

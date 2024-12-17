@@ -3,13 +3,14 @@ let current_text =
 `@ title Example
 @ author Me
 @ description 
-- Edit this to create a matching form.
-- / Paths / are top level sections.
-- Fields are listed below paths and can appear in multiple places.
-- The contents and properties are listed separately.
-- Fields can have properties like min, max, and step.
-- Fields can have multiple lines of content.
+- Edit this to create a form above.
+- / Paths / are top level sections with points underneath linking to fields.
+- Fields have builtin properties as well as multiline content.
+- Currently, properties are min, max, and step.
+- 
 - Type in the fields to update the text.
+- Type in the text to update the fields.
+- Currently, changes take effect on blur.
 
 / Default Tab / A title
 - Field 1
@@ -230,12 +231,6 @@ function elsFromText() {
       editDiv.addEventListener("blur", () => {
         handleFieldSubmit(fieldDiv, field);
       });
-      //editDiv.addEventListener("keydown", (event) => {
-      //  if (event.key == "Enter") {
-      //    //event.preventDefault();
-      //    //document.execCommand("insertHTML", false, "<div></div>"); // Insert newline
-      //  }
-      //});
 
       const decButton = document.createElement("button");
       decButton.innerText = "-1";
@@ -317,6 +312,15 @@ function applyOperation(element, fieldData, operation, value) {
 
 function handleFieldSubmit(element, field) {
   const editDiv = element.querySelector(".editable");
+  const fieldData = structureFromText(current_text).fields[field];
+  const lines = editDiv.innerHTML.split("\n");
+
+  // clamp the value to the min and max
+  if (lines.length === 1 && !isNaN(parseInt(lines[0]))) {
+    const value = parseInt(lines[0]);
+    editDiv.innerHTML = Math.min(Math.max(value, fieldData.min ?? -99999990), fieldData.max ?? 99999990);
+  }
+
   const value = editDiv.innerHTML;
   console.log("submit", field, JSON.stringify(value), structureFromText(current_text).fields);
   updateText(current_text, field, value);
@@ -347,7 +351,7 @@ function matchElementToField(element, fieldData, name) {
     // hide buttons
     decButton.style.display = "none";
     incButton.style.display = "none";
-    element.style.gridColumn = "auto";
+    element.style.gridColumn = "span 1";
   } else if (content.length == 1) {
     editDiv.innerHTML = content[0];
     if (!isNaN(parseInt(content[0]))) {
@@ -356,12 +360,22 @@ function matchElementToField(element, fieldData, name) {
       editDiv.step = fieldData.step ?? 1;
       // show buttons
       decButton.style.display = "inline";
+      decButton.style.marginLeft = "4px";
+      decButton.style.borderRadius = "8px 0 0 8px";
       incButton.style.display = "inline";
-      element.style.gridColumn = "auto";
+      incButton.style.borderRadius = "0 8px 8px 0";
+      element.style.gridColumn = "span 1";
       // show step
       if (fieldData.step) {
         decButton.innerText = "-" + fieldData.step;
         incButton.innerText = "+" + fieldData.step;
+      }
+      // show min and max
+      if (fieldData.min) {
+        decButton.disabled = parseInt(editDiv.innerHTML) <= parseInt(fieldData.min);
+      }
+      if (fieldData.max) {
+        incButton.disabled = parseInt(editDiv.innerHTML) >= parseInt(fieldData.max);
       }
     }
   } else {
@@ -369,7 +383,7 @@ function matchElementToField(element, fieldData, name) {
     // hide buttons
     decButton.style.display = "none";
     incButton.style.display = "none";
-    element.style.gridColumn = "span 2";
+    element.style.gridColumn = "1 / -1";
   }
 }
 

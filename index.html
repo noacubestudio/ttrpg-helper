@@ -7,7 +7,7 @@
   <style>
     body {
       font-family: sans-serif;
-      margin: 10px;
+      margin: 0;
       padding: 0;
       background-color: #ddd;
     }
@@ -17,62 +17,91 @@
       -webkit-user-select: none;
       font-size: 16px;
     }
+
+    /* nav bar */
     nav {
       display: flex;
-      gap: 16px;
+      align-items: stretch;
+      gap: 8px;
+
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
+
       background-color: #222;
-      padding: 8px;
+      padding: 0px;
+      padding-bottom: 24px;
       overflow-x: scroll;
+      overflow-y: hidden;
+    }
+    #file {
+      display: flex;
+      gap: 8px;
+      width: fit-content;
     }
     #tabs {
       display: flex;
+      align-items: stretch;
+      flex-grow: 1;
       flex-shrink: 0;
-      gap: 4px;
+      gap: 0px;
+    }
+    #tabs > * {
+      flex-grow: 1;
+      flex-shrink: 0;
     }
     #filePicker {
       font-stretch: ultra-condensed;
       color: transparent;
+      font-size: 0px;
     }
     button, input::file-selector-button {
-      padding: 8px 12px;
-      border: 1px solid #666;
-      border-radius: 8px;
+      padding: 16px 12px;
+      /* border: 1px solid #666; */
+      border: none;
+      border-radius: 0px;
       background-color: #333;
       color: white;
+      font-size: 16px;
       /* cursor: pointer; */
     }
     button:hover, input::file-selector-button:hover {
       background-color: #444;
-      border-color: aqua;
       cursor: pointer;
     }
     button:active, button.active, input::file-selector-button:active {
       background-color: #555;
-      border-color: #666;
       cursor: pointer;
     }
 
+    /* form */
+    form {
+      margin: 8px;
+    }
+
     h2 {
-      margin: 16px 0 8px;
+      margin: 16px 0 8px 8px;
       font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
       font-weight: normal;
       font-size: 24px;
     }
     section {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 8px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-gap: 0 8px;
     }
+
     .field {
       grid-column: span 1;
+      max-width: 1fr;
+    }
+    .field > * {
+      max-width: 1200px;
     }
 
     .field label {
-      margin-left: 2px;
+      margin-left: 8px;
       color: #222;
       font-weight: 550;
     }
@@ -80,7 +109,7 @@
       margin-bottom: 4px;
       width: 100%;
       display: flex;
-      gap: 4px;
+      gap: 0px;
     }
 
     .input-div > * {
@@ -96,21 +125,26 @@
     }
     .input-div > button {
       /* padding: 4px 8px; */
-      border: 1px solid #333;
-      background: linear-gradient(180deg, #999, #555);
-      color: white;
+      border: 1px solid #888;
+      background: linear-gradient(180deg, #eee, #aaa);
+      color: #222;
       border-radius: 8px;
       width: 60px;
       order: 1;
     }
     .input-div > button:hover {
-      background: #555;
+      background: #999;
       cursor: pointer;
     }
     .input-div > button:active {
-      background: #333;
+      background: #777;
       cursor: pointer;
     }
+    .input-div > button:disabled {
+      background: #ccc;
+      color: #666;
+    }
+    /* placeholder text */
     [contenteditable=true]:empty:not(:focus):before{
       content:attr(data-ph);
       color:grey;
@@ -120,9 +154,9 @@
     .editor {
       border: 1px solid #bbb;
       background-color: #eee;
-      padding: 4px;
+      padding: 8px;
       margin: 0 0 100px 0;
-      max-width: 1600px;
+      max-width: 1200px;
       border-radius: 8px;
 
       min-height: 200px;
@@ -136,12 +170,17 @@
 <body>
   <nav>
     <div id="tabs"></div>
-    <button id="download">Download</button>
-    <input type="file" id="filePicker" accept=".txt">
+    <div id="file">
+      <button id="download">Download</button>
+      <input type="file" id="filePicker" accept=".txt">
+    </div>
   </nav>
-  <div id="generated"></div>
-  <h2>Editor</h2>
-  <div id="editor" class="editor" contenteditable="true"></div>
+
+  <form>
+    <div id="generated"></div>
+    <h2>Editor</h2>
+    <div id="editor" class="editor" contenteditable="true"></div>
+  </form>
 
   <script src="script.js"></script>
 </body>

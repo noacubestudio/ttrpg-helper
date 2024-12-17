@@ -1,27 +1,29 @@
 
 let current_text = 
 `@ title Example
-@ author Me
-@ description 
-- Edit this to create a form above.
-- / Paths / are top level sections with points underneath linking to fields.
-- Fields have builtin properties as well as multiline content.
-- Currently, properties are min, max, and step.
-- 
-- Type in the fields to update the text.
-- Type in the text to update the fields.
-- Currently, changes take effect on blur.
 
-/ Default Tab / A title
+/ Default Tab / A Title
+- Description
 - Field 1
 - Field 2
 - Field :3
 - Field 4
 - Field 5
 
-/ Another Tab / Another title
+/ Another Tab / Another Title
 - Field 4
 - Field 5
+
+Description
+- Edit the text file near the bottom or load one to change this form.
+- The file has:
+- Paths (Tab and Header Title) with a list linking to fields.
+- Fields with a list of lines of text and properties.
+- Supported properties are min, max, and step.
+- 
+- Type in the fields to update the text.
+- Type in the text to update the fields.
+- Currently, changes take effect on blur.
 
 Field 1
 - max 10
@@ -33,13 +35,13 @@ Field 2
 - 2
 
 Field :3
-- 3:
-- some
--
-- text
+- :3
 
 Field 4
 - 4
+- some
+-
+- text
 
 Field 5
 - Some text
@@ -138,8 +140,8 @@ function structureFromText(text) {
 
       } else if (firstLine.startsWith("@ ")) {
         // is meta data
-        const [key, value] = firstLine.slice(2).split(" ");
-        meta[key] = value;
+        const [key, ...value] = firstLine.slice(2).split(" ");
+        meta[key] = value.join(" ");
   
       } else {
         // is a field, rest of the items are content or meta data
@@ -167,6 +169,9 @@ function structureFromText(text) {
 
 
 function elsFromText() {
+  // jump to the top of the page
+  window.scrollTo(0, 0);
+
   const div = document.getElementById("generated");
   const structure = structureFromText(current_text);
 
@@ -312,17 +317,17 @@ function applyOperation(element, fieldData, operation, value) {
 
 function handleFieldSubmit(element, field) {
   const editDiv = element.querySelector(".editable");
-  const fieldData = structureFromText(current_text).fields[field];
-  const lines = editDiv.innerHTML.split("\n");
+  // const fieldData = structureFromText(current_text).fields[field];
+  // const lines = editDiv.innerHTML.split("\n");
 
-  // clamp the value to the min and max
-  if (lines.length === 1 && !isNaN(parseInt(lines[0]))) {
-    const value = parseInt(lines[0]);
-    editDiv.innerHTML = Math.min(Math.max(value, fieldData.min ?? -99999990), fieldData.max ?? 99999990);
-  }
+  // // clamp the value to the min and max
+  // if (lines.length === 1 && !isNaN(parseInt(lines[0]))) {
+  //   const value = parseInt(lines[0]);
+  //   editDiv.innerHTML = Math.min(Math.max(value, fieldData.min ?? -99999990), fieldData.max ?? 99999990);
+  // }
 
   const value = editDiv.innerHTML;
-  console.log("submit", field, JSON.stringify(value), structureFromText(current_text).fields);
+  //console.log("submit", field, JSON.stringify(value), structureFromText(current_text).fields);
   updateText(current_text, field, value);
   matchElementToField(element, structureFromText(current_text).fields[field], field);
 }
@@ -340,29 +345,31 @@ function matchElementToField(element, fieldData, name) {
     return;
   }
   const content = fieldData.content;
-  console.log("match", editDiv.innerHTML, content);
+  //console.log("match", editDiv.innerHTML, content);
   if (content == editDiv.innerHTML) {
     return;
   }
 
+  decButton.style.display = "none";
+  incButton.style.display = "none";
+  element.style.gridColumn = "span 1";
+
   if (content.length == 0) {
+    // no content
     editDiv.setAttribute("data-ph", "(enter text here)");
     editDiv.innerHTML = "";
-    // hide buttons
-    decButton.style.display = "none";
-    incButton.style.display = "none";
-    element.style.gridColumn = "span 1";
   } else if (content.length == 1) {
     editDiv.innerHTML = content[0];
-    if (!isNaN(parseInt(content[0]))) {
+    if (!isNaN(Number(content[0]))) {
+      // single number content
       editDiv.min = fieldData.min ?? 0;
       editDiv.max = fieldData.max ?? 99999990;
       editDiv.step = fieldData.step ?? 1;
       // show buttons
       decButton.style.display = "inline";
-      decButton.style.marginLeft = "4px";
-      decButton.style.borderRadius = "8px 0 0 8px";
       incButton.style.display = "inline";
+      editDiv.style.borderRadius = "8px 0 0 8px";
+      decButton.style.borderRadius = "0";
       incButton.style.borderRadius = "0 8px 8px 0";
       element.style.gridColumn = "span 1";
       // show step
@@ -372,17 +379,15 @@ function matchElementToField(element, fieldData, name) {
       }
       // show min and max
       if (fieldData.min) {
-        decButton.disabled = parseInt(editDiv.innerHTML) <= parseInt(fieldData.min);
+        decButton.disabled = Number(content[0]) <= parseInt(fieldData.min);
       }
       if (fieldData.max) {
-        incButton.disabled = parseInt(editDiv.innerHTML) >= parseInt(fieldData.max);
+        incButton.disabled = Number(content[0]) >= parseInt(fieldData.max);
       }
     }
   } else {
+    // multiline content
     editDiv.innerHTML = content.join("\n");
-    // hide buttons
-    decButton.style.display = "none";
-    incButton.style.display = "none";
     element.style.gridColumn = "1 / -1";
   }
 }
@@ -398,7 +403,7 @@ function updateText(text, fieldname, value) {
   value = value.replace(/<\/div>/g, "");
   value = value.replace(/<br>/g, "");
   
-  console.log("pre   ", fieldname, JSON.stringify(value));
+  //console.log("pre   ", fieldname, JSON.stringify(value));
   // add dashes to the beginning of each line
   let newContent = value.split("\n");
   newContent = newContent.map((line) => {

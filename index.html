@@ -1,22 +1,148 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#000000">
-    <title>Character Sheet</title>
-    <link rel="stylesheet" href="reset.css">
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <div class="container">
-        <div id="file">
-            <button id="save-button">Save</button>
-            <input type="file" id="file-input" accept=".json">
-        </div>
-        <div id="inputs"></div>
-        <div id="tabs"></div>
-    </div>
-    <script src="script.js"></script>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FormMaker</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 10px;
+      padding: 0;
+      background-color: #ddd;
+    }
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      font-size: 16px;
+    }
+    nav {
+      display: flex;
+      gap: 16px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #222;
+      padding: 8px;
+      overflow-x: scroll;
+    }
+    #tabs {
+      display: flex;
+      flex-shrink: 0;
+      gap: 4px;
+    }
+    #filePicker {
+      font-stretch: ultra-condensed;
+      color: transparent;
+    }
+    button, input::file-selector-button {
+      padding: 8px 12px;
+      border: 1px solid #666;
+      border-radius: 8px;
+      background-color: #333;
+      color: white;
+      /* cursor: pointer; */
+    }
+    button:hover, input::file-selector-button:hover {
+      background-color: #444;
+      border-color: aqua;
+      cursor: pointer;
+    }
+    button:active, button.active, input::file-selector-button:active {
+      background-color: #555;
+      border-color: #666;
+      cursor: pointer;
+    }
+
+    h2 {
+      margin: 16px 0 8px;
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+      font-weight: normal;
+      font-size: 24px;
+    }
+    section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 8px;
+    }
+    .field {
+      grid-column: span 1;
+    }
+
+    .field label {
+      margin-left: 2px;
+      color: #222;
+      font-weight: 550;
+    }
+    .input-div {
+      margin-bottom: 4px;
+      width: 100%;
+      display: flex;
+      gap: 4px;
+    }
+
+    .input-div > * {
+      border: 1px solid #bbb;
+      background-color: #eee;
+      padding: 8px;
+
+      border-radius: 8px;
+      width: 100%;
+      white-space: pre-wrap;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+    .input-div > button {
+      /* padding: 4px 8px; */
+      border: 1px solid #333;
+      background: linear-gradient(180deg, #999, #555);
+      color: white;
+      border-radius: 8px;
+      width: 60px;
+      order: 1;
+    }
+    .input-div > button:hover {
+      background: #555;
+      cursor: pointer;
+    }
+    .input-div > button:active {
+      background: #333;
+      cursor: pointer;
+    }
+    [contenteditable=true]:empty:not(:focus):before{
+      content:attr(data-ph);
+      color:grey;
+      font-style:italic;
+    }
+
+    .editor {
+      border: 1px solid #bbb;
+      background-color: #eee;
+      padding: 4px;
+      margin: 0 0 100px 0;
+      max-width: 1600px;
+      border-radius: 8px;
+
+      min-height: 200px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 1em;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div id="tabs"></div>
+    <button id="download">Download</button>
+    <input type="file" id="filePicker" accept=".txt">
+  </nav>
+  <div id="generated"></div>
+  <h2>Editor</h2>
+  <div id="editor" class="editor" contenteditable="true"></div>
+
+  <script src="script.js"></script>
+</body>
 </html>

@@ -1,292 +1,426 @@
-const tabsContainer = document.getElementById("tabs");
-const inputsContainer = document.getElementById("inputs");
 
-let currentCategory = undefined;
-let characterData = undefined;
-let isTabletSized = window.matchMedia(`(min-width: ${768}px)`).matches;
-let rowCount = (isTabletSized) ? 4 : 2;
+let current_text = 
+`@ title Example
+@ author Me
+@ description 
+- Edit this to create a matching form.
+- / Paths / are top level sections.
+- Fields are listed below paths and can appear in multiple places.
+- The contents and properties are listed separately.
+- Fields can have properties like min, max, and step.
+- Fields can have multiple lines of content.
+- Type in the fields to update the text.
 
+/ Default Tab / A title
+- Field 1
+- Field 2
+- Field :3
+- Field 4
+- Field 5
 
-// Load the data from empty 5e template
-fetch("emptyTemplateDND5e.json")
-.then(response => response.json())
-.then(data => {
-    loadCharacter(data);
-});
+/ Another Tab / Another title
+- Field 4
+- Field 5
 
-// Generate the input fields for a given category
-function showInputs(category, categoryData) {
-    // Clear the inputs container
-    inputsContainer.innerHTML = "";
+Field 1
+- max 10
+- 1
 
-    // Make the header
-    // const header = document.createElement("h1");
-    // header.textContent = category;
-    // inputsContainer.appendChild(header);
+Field 2
+- min 0
+- step 2
+- 2
 
+Field :3
+- 3:
+- some
+-
+- text
 
-    // Multiple items can share a row
-    let currentRow = null;
-    let remainingWidth = rowCount;
+Field 4
+- 4
 
-    let displayItems = Object.assign({}, categoryData);
-    // Add empty full row at the end
-    displayItems.endSpacer = {view: "info", width: 'full'};
-  
-    // Generate the inputs for each field in the category
-    for (const field in displayItems) {
-        const fieldData = displayItems[field];
-        const labelType = (fieldData.view === "headline") ? "h2" : ((fieldData.view === "info") ? "p" : "label");
-        const label = document.createElement(labelType);
-        label.textContent = fieldData.label;
-        label.setAttribute("for", field);
-        if (fieldData.view === "info") label.classList.add('info');
+Field 5
+- Some text
+- More text
+- Even more text
+`;
+let current_tab_index = 0;
+const FIELD_PROPERTIES = ["max", "min", "step"];
 
-        // Create a new row for full width elements
-        const isFullWidth = (fieldData.width === 'full' 
-            || fieldData.view === "headline" 
-            || fieldData.view === "textInput"
-            || fieldData.view === "info");
+// initial setup
+loadText();
 
-        if (isFullWidth) {
-            // fill existing row with spacers
-            if (currentRow != null && currentRow.childElementCount < rowCount && currentRow.querySelector('.full') === null) {
-                for (let i = rowCount - currentRow.childElementCount; i > 0; i--) {
-                    const spacer = document.createElement("div");
-                    spacer.classList.add('spacer');
-                    spacer.classList.add('field-container');
-                    currentRow.appendChild(spacer);
-                }
-            }
+document.getElementById("filePicker").addEventListener("change", handleFile);
+document.getElementById("editor").addEventListener("blur", modifiedText);
 
-            currentRow = document.createElement('div');
-            currentRow.classList.add('row');
-            inputsContainer.appendChild(currentRow);
-            remainingWidth = rowCount;
-        }
-
-        // Create one element
-        let input;
-
-        switch (fieldData.view) {
-            case "textInput":
-                input = document.createElement("textarea");
-                input.setAttribute("type", "text");
-                input.setAttribute("id", field);
-                input.setAttribute("rows", "1");
-                input.setAttribute("autocorrect", "off");
-                input.value = fieldData.input;
-                input.addEventListener("input", () => {
-                    newValue = input.value;
-                    updateField(fieldData, newValue);
-
-                    // reset the height to auto in case the user deletes text
-                    input.style.height = 'auto';
-                    // set the height to match the scroll height of the textarea
-                    input.style.height = `${input.scrollHeight}px`;
-                });
-                break;
-            case "intInput":
-                input = document.createElement("input");
-                input.setAttribute("type", "number");
-                input.setAttribute("id", field);
-                input.value = fieldData.input;
-                input.addEventListener("input", () => {
-                    newValue = parseInt(input.value);
-                    updateField(fieldData, newValue);
-                });
-                break;
-            case "stepper":
-                input = document.createElement("div");
-                input.classList.add("stepper-input");
-
-                const numInput = document.createElement("input");
-                numInput.setAttribute("type", "number");
-                numInput.setAttribute("id", field);
-                numInput.setAttribute("value", fieldData.input);
-                numInput.setAttribute("min", fieldData.viewProperties.minValue);
-                numInput.setAttribute("max", fieldData.viewProperties.maxValue);
-                numInput.addEventListener("input", () => {
-                    if (numInput.value.length > 0) {
-                        if (numInput.value < fieldData.viewProperties.minValue) {
-                            numInput.value = fieldData.viewProperties.minValue;
-                        } else if (numInput.value > fieldData.viewProperties.maxValue) {
-                            numInput.value = fieldData.viewProperties.maxValue;
-                        }
-                    }
-                    // Update the JSON data
-                    newValue = parseInt(numInput.value);
-                    updateField(fieldData, newValue);
-                });
-                input.appendChild(numInput);
-    
-                const decButton = document.createElement("button");
-                decButton.classList.add("stepper-button");
-                decButton.textContent = "-";
-                decButton.addEventListener("click", () => {
-                    if (input.querySelector("input").value > fieldData.viewProperties.minValue) {
-                        input.querySelector("input").value--;
-                        // Update the JSON data
-                        newValue = Number(input.querySelector("input").value);
-                        updateField(fieldData, newValue);
-                    }
-                });
-                input.appendChild(decButton);
-
-                const incButton = document.createElement("button");
-                incButton.classList.add("stepper-button");
-                incButton.textContent = "+";
-                incButton.addEventListener("click", () => {
-                    if (input.querySelector("input").value < fieldData.viewProperties.maxValue) {
-                        input.querySelector("input").value++;
-                        // Update the JSON data
-                        newValue = Number(input.querySelector("input").value);
-                        updateField(fieldData, newValue);
-                    }
-                });
-                input.appendChild(incButton);
-                break;
-            case "headline":
-            case "info":
-                break;
-            default:
-                input = document.createElement("input");
-                input.setAttribute("type", "text");
-                input.setAttribute("id", field);
-                input.setAttribute("autocorrect", "off");
-                input.value = fieldData.input;
-                input.addEventListener("input", () => {
-                    newValue = input.value;
-                    updateField(fieldData, newValue);
-                });
-        }
-
-        // add the container for one field to the row
-        if (!isFullWidth) {
-            // if the current one is full
-            if (!currentRow || remainingWidth <= 0) {
-                // Create a new row 
-                currentRow = document.createElement('div');
-                currentRow.classList.add('row');
-                inputsContainer.appendChild(currentRow);
-                remainingWidth = rowCount;
-            }
-        }
-        // add to row
-        // make the input and label in one element div
-        const container = document.createElement("div");
-        container.classList.add('field-container');
-        if (label.textContent !== undefined && label.textContent.length > 0) {
-            container.appendChild(label);
-        }
-        if (input !== undefined) {
-            container.appendChild(input);
-        }
-        currentRow.appendChild(container);
-        if (isFullWidth) {
-            container.classList.add('full');
-            remainingWidth-= rowCount;
-        } else remainingWidth--;
-
-
-        // modify height of text area based on lines
-        if (input !== undefined && input.tagName === "TEXTAREA") {
-            input.style.height = `${input.scrollHeight}px`;
-        }
-    }
-}
-
-
-function updateField(fieldData, newValue) {
-    fieldData.input = newValue;
-    console.log(fieldData.label, fieldData.input, fieldData.view);
-    console.log(characterData);
-}
-
-
-const fileInput = document.getElementById("file-input");
-fileInput.addEventListener("change", (event) => {
-    const selectedFile = event.target.files[0];
+function handleFile(event) {
+  const file = event.target.files[0];
+  if (file) {
     const reader = new FileReader();
-
-    // Add an event listener for when the file is loaded
-    reader.addEventListener("load", () => {
-        // Get the file contents as a string and parse as JSON
-        const fileContents = reader.result;
-        const jsonData = JSON.parse(fileContents);
-
-        // Do something with the JSON data
-        loadCharacter(jsonData);
-    });
-
-    // Read the file as text
-    reader.readAsText(selectedFile);
-});
-
-
-const saveButton = document.getElementById("save-button");
-saveButton.addEventListener("click", () => {
-    const fileName = (characterData.BASE !== undefined) ? String(
-        characterData.BASE.characterName.input + 
-        characterData.BASE.level.input
-    ) : "character";
-
-    const data = characterData;
-    const jsonString = JSON.stringify(data, null, 2);
-    const blob = new Blob([jsonString], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = fileName + ".json";
-    a.click();
-    URL.revokeObjectURL(url);
-});
-
-
-function loadCharacter(data) {
-    // set new
-    characterData = data;
-    console.log("Loaded character from JSON!");
-    console.log(characterData);
-
-    // Cleat the tabs container
-    tabsContainer.innerHTML = "";
-
-    // Calculate tab width based on number
-    const tabCount = Object.keys(characterData).length;
-    const tabWidth = 100 / tabCount;
-
-    // Generate the tabs
-    for (const category in characterData) {
-        const tab = document.createElement("button");
-        tab.style.width = `${tabWidth}%`;
-        tab.textContent = category;
-        tab.setAttribute("class", "tab");
-        tab.setAttribute("id", category);
-        tab.addEventListener("click", () => {
-            currentCategory = category;
-            showInputs(category, characterData[category]);
-            setActiveTab(category);
-            window.scrollTo(0, 0);
-        });
-        tabsContainer.appendChild(tab);
-    }
-
-    // Show the inputs for the first category by default
-    const firstCategory = Object.keys(characterData)[0];
-    currentCategory = firstCategory;
-    showInputs(firstCategory, characterData[firstCategory]);
-    setActiveTab(firstCategory);
+    reader.onload = function () {
+      current_text = reader.result;
+      loadText();
+    };
+    reader.readAsText(file);
+  }
 }
 
-function setActiveTab(tabId) {
-    // Get all tab elements
-    const tabs = document.querySelectorAll('.tab');
+document.getElementById("download").addEventListener("click", download);
+function download() {
+  // get filename from metadata field if available
+  const metadata = structureFromText(current_text).meta;
+  const title = metadata.title ?? "data";
+  // always append date to filename
+  const date = new Date();
+  const dateString = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  const filename = `${title}-${dateString}.txt`;
+
+  // download the file
+  const element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(current_text));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
+
+
+
+// text -> structure -> elements
+
+function loadText() {
+  const editor = document.getElementById("editor");
+  editor.innerHTML = current_text;
+  elsFromText();
+}
+
+function modifiedText(event) {
+  current_text = event.target.innerText;
+  elsFromText();
+}
+
+function structureFromText(text) {
+
+  function parseLines(text) {
+    const groups = [];
   
-    // Remove active class from all tabs
-    tabs.forEach(tab => tab.classList.remove('active'));
+    text.split("\n").forEach(line => {
+      if (line.startsWith("-")) {
+        groups[groups.length - 1].push(line.slice(2));
+      } else {
+        groups.push([line]);
+      }
+    });
+    return groups;
+  }
   
-    // Add active class to selected tab
-    const selectedTab = document.getElementById(tabId);
-    selectedTab.classList.add('active');
+  function parseStructure(groups) {
+    const paths = [];
+    const fields = {};
+    const meta = {};
+  
+    groups.forEach(group => {
+      const firstLine = group[0].trim();
+  
+      if (firstLine.startsWith("/ ")) {
+        // is a path, rest of the items are fields
+        // remove any "/ " or " / " in the string
+        paths.push({path: firstLine.split("/ ").filter(item => item.length > 0), fields: []});
+        group.slice(1).forEach(line => {
+          paths[paths.length - 1].fields.push(line.trim());
+        });
+
+      } else if (firstLine.startsWith("@ ")) {
+        // is meta data
+        const [key, value] = firstLine.slice(2).split(" ");
+        meta[key] = value;
+  
+      } else {
+        // is a field, rest of the items are content or meta data
+        fields[firstLine] = {content: []};
+        group.slice(1).forEach(line => {
+          line = line.trim();
+          const firstWord = line.split(" ")[0];
+          if (FIELD_PROPERTIES.includes(firstWord)) {
+            fields[firstLine][firstWord] = line.slice(firstWord.length + 1);
+          } else {
+            fields[firstLine].content.push(line);
+          }
+        });
+      }
+    });
+    //console.log("paths", paths);
+    //console.log("fields", fields);
+    return { paths, fields, meta };
+  }
+
+  const lines = parseLines(text);
+  const structure = parseStructure(lines);
+  return structure;
+}
+
+
+function elsFromText() {
+  const div = document.getElementById("generated");
+  const structure = structureFromText(current_text);
+
+  // clear out existing elements
+  while (div.firstChild) {
+    div.removeChild(div.firstChild);
+  }
+
+  // go through the structure and find all tabs. tabs are top level paths. each is [0]
+  const tabs = [...new Set(structure.paths.map(path => path.path[0]))];
+  const tabDiv = document.getElementById("tabs");
+  while (tabDiv.firstChild) {
+    tabDiv.removeChild(tabDiv.firstChild);
+  }
+
+  if (tabs.length > 1) {
+    // show tab selector
+    tabs.forEach((tabName, tabIndex) => {
+      const tabButton = document.createElement("button");
+      tabButton.innerText = tabName;
+      if (tabIndex == current_tab_index) {
+        tabButton.classList.add("active");
+      }
+      tabButton.onclick = function(e) {
+        e.preventDefault();
+        current_tab_index = tabIndex;
+        elsFromText();
+      };
+      tabDiv.appendChild(tabButton);
+    });
+  }
+
+
+  // filter paths to only include the current tab
+  const currentTab = tabs[current_tab_index];
+  const currentPaths = structure.paths.filter(path => path.path[0] == currentTab);
+
+  // name site title based on current tab and file title
+  const title = structure.meta.title ?? "Untitled";
+  document.title = `${currentTab} - ${title}`;
+
+  currentPaths.forEach(path => {
+    // header for the path
+    const header = document.createElement("h2");
+    header.innerText = path.path[path.path.length - 1];
+    div.appendChild(header);
+
+    // section for the path
+    const section = document.createElement("section");
+    div.appendChild(section);
+
+    // add generic input elements
+    // edited later by the specific contents and metadata updating, without removing or adding new elements
+    // this way, states are preserved and the html still works as expected
+
+    path.fields.forEach(field => {
+      const fieldDiv = document.createElement("div");
+
+      const editDiv = document.createElement("div");
+      editDiv.contentEditable = true;
+      editDiv.classList.add("editable");
+      editDiv.addEventListener("blur", () => {
+        handleFieldSubmit(fieldDiv, field);
+      });
+      //editDiv.addEventListener("keydown", (event) => {
+      //  if (event.key == "Enter") {
+      //    //event.preventDefault();
+      //    //document.execCommand("insertHTML", false, "<div></div>"); // Insert newline
+      //  }
+      //});
+
+      const decButton = document.createElement("button");
+      decButton.innerText = "-1";
+      decButton.onclick = function() { };
+      decButton.classList.add("dec");
+      decButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        const fieldData = structure.fields[field];
+        console.log("fieldData", fieldData);
+        const step = Number(fieldData.step ?? 1);
+        applyOperation(fieldDiv, fieldData, "subtract", step);
+        handleFieldSubmit(fieldDiv, field);
+      });
+
+      const incButton = document.createElement("button");
+      incButton.innerText = "+1";
+      incButton.onclick = function() { };
+      incButton.classList.add("inc");
+      incButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        const fieldData = structure.fields[field];
+        const step = Number(fieldData.step ?? 1);
+        applyOperation(fieldDiv, fieldData, "add", step);
+        handleFieldSubmit(fieldDiv, field);
+      });
+
+      // input div contains the above elements
+      const inputDiv = document.createElement("div");
+      inputDiv.classList.add("input-div");
+
+      inputDiv.appendChild(editDiv);
+      inputDiv.appendChild(decButton);
+      inputDiv.appendChild(incButton);
+      decButton.style.display = "none";
+      incButton.style.display = "none";
+
+      // label
+      const labelDiv = document.createElement("label");
+      labelDiv.classList.add("field-label");
+      labelDiv.innerText = field;
+
+      // field div contains all of the above
+      fieldDiv.classList.add("field");
+
+      fieldDiv.appendChild(labelDiv);
+      fieldDiv.appendChild(inputDiv);
+
+      // field div needs to be identified by the field name
+      fieldDiv.name = field;
+      section.appendChild(fieldDiv);
+
+      // match the element to the field data
+      // later, this is done to *other* elements as one is updated
+      // as well as to the element itself when no longer focused
+      matchElementToField(fieldDiv, structure.fields[field], field);
+    });
+  });
+}
+
+/**
+ * 
+ * flow explanation: ( data is temporary conversion medium)
+ * 
+ * reload txt -> regenerate data -> replace elements
+ *                               element change -> change field in txt -> regenerate data -> match elements to data
+ * apply operation to element -> element change -> change field in txt -> regenerate data -> match elements to data
+ */
+
+function applyOperation(element, fieldData, operation, value) {
+  //console.log("min", fieldData.min, "max", fieldData.max);
+  const min = parseInt(fieldData.min ?? -99999990);
+  const max = parseInt(fieldData.max ?? 99999990);
+  const editDiv = element.querySelector(".editable");
+  const currentValue = parseInt(editDiv.innerText);
+  const newValue = operation == "add" ? currentValue + value : currentValue - value;
+  const clampedValue = Math.min(Math.max(newValue, min), max);
+  editDiv.innerText = clampedValue.toString();
+}
+
+function handleFieldSubmit(element, field) {
+  const editDiv = element.querySelector(".editable");
+  const value = editDiv.innerHTML;
+  console.log("submit", field, JSON.stringify(value), structureFromText(current_text).fields);
+  updateText(current_text, field, value);
+  matchElementToField(element, structureFromText(current_text).fields[field], field);
+}
+
+function matchElementToField(element, fieldData, name) {
+  // get the divs inside the field div
+  const inputDiv = element.querySelector(".input-div");
+  const editDiv = inputDiv.querySelector(".editable");
+  const decButton = inputDiv.querySelector(".dec");
+  const incButton = inputDiv.querySelector(".inc");
+
+  if (!fieldData) {
+    console.warn(`Field data missing for ${name}`);
+    editDiv.setAttribute("data-ph", "(add field in editor!)");
+    return;
+  }
+  const content = fieldData.content;
+  console.log("match", editDiv.innerHTML, content);
+  if (content == editDiv.innerHTML) {
+    return;
+  }
+
+  if (content.length == 0) {
+    editDiv.setAttribute("data-ph", "(enter text here)");
+    editDiv.innerHTML = "";
+    // hide buttons
+    decButton.style.display = "none";
+    incButton.style.display = "none";
+    element.style.gridColumn = "auto";
+  } else if (content.length == 1) {
+    editDiv.innerHTML = content[0];
+    if (!isNaN(parseInt(content[0]))) {
+      editDiv.min = fieldData.min ?? 0;
+      editDiv.max = fieldData.max ?? 99999990;
+      editDiv.step = fieldData.step ?? 1;
+      // show buttons
+      decButton.style.display = "inline";
+      incButton.style.display = "inline";
+      element.style.gridColumn = "auto";
+      // show step
+      if (fieldData.step) {
+        decButton.innerText = "-" + fieldData.step;
+        incButton.innerText = "+" + fieldData.step;
+      }
+    }
+  } else {
+    editDiv.innerHTML = content.join("\n");
+    // hide buttons
+    decButton.style.display = "none";
+    incButton.style.display = "none";
+    element.style.gridColumn = "span 2";
+  }
+}
+
+// element -> structure -> text
+
+function updateText(text, fieldname, value) {
+  
+  // newline in between adjacent divs
+  value = value.replace(/\n<div>/g, "\n");
+  value = value.replace(/<div>/g, "\n");
+  value = value.trim();
+  value = value.replace(/<\/div>/g, "");
+  value = value.replace(/<br>/g, "");
+  
+  console.log("pre   ", fieldname, JSON.stringify(value));
+  // add dashes to the beginning of each line
+  let newContent = value.split("\n");
+  newContent = newContent.map((line) => {
+    return "- " + line;
+  });
+  //console.log("set lines:", fieldname, newContent);
+
+  const previousLines = text.split("\n");
+  const newLines = [];
+
+  // find the right line in the text to modify.
+  // go through the actual text and find the change to make. then use textToStructure to update the structure.
+  let inField = false;
+  previousLines.forEach((line, index) => {
+    const isNested = line.startsWith("-") || line == "-";
+    const isFinalLine = index == previousLines.length - 1;
+    const isProperty = FIELD_PROPERTIES.includes(line.split(" ")[1]);
+
+    if (!isNested && line.trim() == fieldname) {
+      // found the field to update
+      inField = true;
+    } else if (inField && (!isNested || isFinalLine)) {
+      // done with the field, add the new content
+      inField = false;
+      newContent.forEach((newLine) => {
+        newLines.push(newLine);
+      });
+    }
+
+    if (isProperty || !isNested || !inField) {
+      // push as is
+      newLines.push(line);
+    }
+  });
+
+  // update view based on changes
+  current_text = newLines.join("\n");
+  loadText();
 }

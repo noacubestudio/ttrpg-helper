@@ -17,6 +17,9 @@
       -webkit-user-select: none;
       font-size: 16px;
     }
+    p {
+      margin: 8px;
+    }
 
     /* nav bar */
     nav {
@@ -28,12 +31,15 @@
       bottom: 0;
       left: 0;
       right: 0;
+      max-width: 1200px;
+      margin: 0 auto;
 
-      background-color: #222;
-      padding: 0px;
-      padding-bottom: 24px;
+      background-color: none;
+      padding: 2px 2px 24px 4px;
       overflow-x: scroll;
       overflow-y: hidden;
+
+      background-color: #33333340;
     }
     #file {
       display: flex;
@@ -46,10 +52,13 @@
       flex-grow: 1;
       flex-shrink: 0;
       gap: 0px;
+      border-radius: 8px;
+      overflow: hidden;
     }
     #tabs > * {
       flex-grow: 1;
       flex-shrink: 0;
+      border-radius: 0px;
     }
     #filePicker {
       font-stretch: ultra-condensed;
@@ -60,24 +69,51 @@
       padding: 16px 12px;
       /* border: 1px solid #666; */
       border: none;
-      border-radius: 0px;
+      position: relative;
+      
       background-color: #333;
       color: white;
       font-size: 16px;
       /* cursor: pointer; */
     }
+    #file > *, input::file-selector-button {
+      border-radius: 8px;
+      min-width: 54px;
+    }
     button:hover, input::file-selector-button:hover {
       background-color: #444;
       cursor: pointer;
     }
-    button:active, button.active, input::file-selector-button:active {
+    button:active, input::file-selector-button:active {
       background-color: #555;
       cursor: pointer;
     }
+    button.active::before {
+      /* match button, but slightly smaller and rounded */
+      content: "";
+      background-color: #ffffff40;
+      border-radius: 4px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: 4px;
+      z-index: 1;
+    }
 
     /* form */
-    form {
-      margin: 8px;
+    #generated {
+      padding: 8px;
+      padding-bottom: 120px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    #editor-container {
+      padding: 8px;
+      padding-bottom: 120px;
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
     h2 {
@@ -88,7 +124,7 @@
     }
     section {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       grid-gap: 0 8px;
     }
 
@@ -102,8 +138,11 @@
 
     .field label {
       margin-left: 8px;
-      color: #222;
+      color: #333;
       font-weight: 550;
+      font-size: 0.96em;
+      /* cut off if too long */
+      white-space: nowrap;
     }
     .input-div {
       margin-bottom: 4px;
@@ -152,12 +191,16 @@
     }
 
     .editor {
-      border: 1px solid #bbb;
+      border: none;
       background-color: #eee;
+      border: 1px solid #bbb;
+      color: #111;
       padding: 8px;
-      margin: 0 0 100px 0;
+      margin: 0;
       max-width: 1200px;
       border-radius: 8px;
+      user-select: text;
+      -webkit-user-select: text;
 
       min-height: 200px;
       overflow-y: auto;
@@ -165,21 +208,32 @@
       font-family: monospace;
       font-size: 1em;
     }
+    .editor * {
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
   </style>
 </head>
 <body>
   <nav>
     <div id="tabs"></div>
     <div id="file">
-      <button id="download">Download</button>
+      <button id="download">⬇️</button>
       <input type="file" id="filePicker" accept=".txt">
     </div>
   </nav>
 
   <form>
     <div id="generated"></div>
-    <h2>Editor</h2>
-    <div id="editor" class="editor" contenteditable="true"></div>
+    <div id="editor-container">
+      <h2>Editor</h2>
+      <p>The text below and the interactive form are in sync.</p>
+      <div id="editor" class="editor" contenteditable="true"></div>
+      <p>
+        ꩜ Created by <a href="https://noacubestudio.github.io/">Noa</a>
+      </p>
+    </div>
   </form>
 
   <script src="script.js"></script>

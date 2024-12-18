@@ -101,9 +101,13 @@ function loadText() {
   editor.innerHTML = current_text;
   elsFromText();
 }
-
 function modifiedText(event) {
-  current_text = event.target.innerText;
+  current_text = event.target.innerHTML;
+  current_text = current_text.replace(/\n<div>/g, "\n");
+  current_text = current_text.replace(/<div>/g, "\n");
+  current_text = current_text.trim();
+  current_text = current_text.replace(/<\/div>/g, "");
+  current_text = current_text.replace(/<br>/g, "");
   elsFromText();
 }
 
@@ -181,7 +185,7 @@ function elsFromText() {
   }
 
   // go through the structure and find all tabs. tabs are top level paths. each is [0]
-  const tabs = [...new Set(structure.paths.map(path => path.path[0]))];
+  const tabs = [...new Set(structure.paths.map(path => path.path[0])), "Editor"];
   const tabDiv = document.getElementById("tabs");
   while (tabDiv.firstChild) {
     tabDiv.removeChild(tabDiv.firstChild);
@@ -202,11 +206,24 @@ function elsFromText() {
       };
       tabDiv.appendChild(tabButton);
     });
+  } else {
+    // Go to editor
+    current_tab_index = tabs.indexOf("Editor");
   }
 
 
   // filter paths to only include the current tab
   const currentTab = tabs[current_tab_index];
+  if (currentTab == "Editor") {
+    const editor = document.getElementById("editor-container");
+    editor.style.display = "block";
+    div.style.display = "none";
+    return;
+  } else {
+    const editor = document.getElementById("editor-container");
+    editor.style.display = "none";
+    div.style.display = "block";
+  }
   const currentPaths = structure.paths.filter(path => path.path[0] == currentTab);
 
   // name site title based on current tab and file title
@@ -384,6 +401,12 @@ function matchElementToField(element, fieldData, name) {
       if (fieldData.max) {
         incButton.disabled = Number(content[0]) >= parseInt(fieldData.max);
       }
+    }
+    // depending on line length/ label length, adjust the element size
+    if (content[0].length > 35 || name.length > 50) {
+      element.style.gridColumn = "1 / -1";
+    } else if (content[0].length > 15 || name.length > 30 || (content[0].length > 1 && fieldData.step > 9)) {
+      element.style.gridColumn = "span 2";
     }
   } else {
     // multiline content

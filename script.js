@@ -15,8 +15,9 @@ let current_text =
 - Field 5
 
 Description
-- Edit the text file near the bottom or load one to change this form.
-- The file has:
+- You can use this tool to use and edit interactive forms.
+- Edit the text file (editor tab) or upload one (file button).
+- The text file should contain:
 - Paths (Tab and Header Title) with a list linking to fields.
 - Fields with a list of lines of text and properties.
 - Supported properties are min, max, and step.
@@ -24,6 +25,9 @@ Description
 - Type in the fields to update the text.
 - Type in the text to update the fields.
 - Currently, changes take effect on blur.
+-
+- There are some bugs and missing features.
+- I personally will use this to keep track of D&D character sheets!
 
 Field 1
 - max 10

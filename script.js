@@ -259,7 +259,6 @@ function elsFromText() {
       });
 
       const decButton = document.createElement("button");
-      decButton.innerText = "-1";
       decButton.onclick = function() { };
       decButton.classList.add("dec");
       decButton.addEventListener("click", (e) => {
@@ -272,7 +271,6 @@ function elsFromText() {
       });
 
       const incButton = document.createElement("button");
-      incButton.innerText = "+1";
       incButton.onclick = function() { };
       incButton.classList.add("inc");
       incButton.addEventListener("click", (e) => {
@@ -394,9 +392,12 @@ function matchElementToField(element, fieldData, name) {
       incButton.style.borderRadius = "0 8px 8px 0";
       element.style.gridColumn = "span 1";
       // show step
-      if (fieldData.step) {
+      if (fieldData.step > 1) {
         decButton.innerText = "-" + fieldData.step;
         incButton.innerText = "+" + fieldData.step;
+      } else {
+        decButton.innerText = "-";
+        incButton.innerText = "+";
       }
       // show min and max
       if (fieldData.min) {

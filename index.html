@@ -27,6 +27,7 @@
       align-items: stretch;
       gap: 4px;
 
+      z-index: 3;
       position: fixed;
       bottom: 0;
       left: 0;
@@ -35,7 +36,7 @@
       margin: 0 auto;
 
       background-color: none;
-      padding: 2px 2px 24px 4px;
+      padding: 2px 2px 16px 4px;
       overflow-x: scroll;
       overflow-y: hidden;
 
@@ -54,16 +55,19 @@
       gap: 0px;
       border-radius: 8px;
       overflow: hidden;
+      min-height: 54px;
     }
     #tabs > * {
       flex-grow: 1;
       flex-shrink: 0;
       border-radius: 0px;
+      min-width: 64px;
     }
     #filePicker {
       font-stretch: ultra-condensed;
       color: transparent;
       font-size: 0px;
+      min-height: 54px;
     }
     button, input::file-selector-button {
       padding: 16px 12px;
@@ -71,27 +75,32 @@
       border: none;
       position: relative;
       
-      background-color: #333;
+      background-color: #222;
       color: white;
       font-size: 16px;
       /* cursor: pointer; */
     }
     #file > *, input::file-selector-button {
       border-radius: 8px;
-      min-width: 54px;
+      min-width: 64px;
+      min-height: 54px;
     }
     button:hover, input::file-selector-button:hover {
-      background-color: #444;
+      background-color: #333;
       cursor: pointer;
     }
     button:active, input::file-selector-button:active {
-      background-color: #555;
+      background-color: #444;
       cursor: pointer;
+    }
+    button.active {
+      background-color: #222;
     }
     button.active::before {
       /* match button, but slightly smaller and rounded */
-      content: "";
-      background-color: #ffffff40;
+      content: '';
+      background-color: #ffffff20;
+      border: #666 2px solid;
       border-radius: 4px;
       position: absolute;
       top: 0;
@@ -152,7 +161,7 @@
     }
 
     .input-div > * {
-      border: 1px solid #bbb;
+      border: 1px solid #999;
       background-color: #eee;
       padding: 8px;
 
@@ -164,9 +173,11 @@
     }
     .input-div > button {
       /* padding: 4px 8px; */
-      border: 1px solid #999;
-      background: linear-gradient(180deg, #eee, #bbb);
-      color: #222;
+      border: 1px solid #aaa;
+      background: linear-gradient(180deg, #eee, #ccc);
+      color: #777;
+      font-weight: 600;
+      font-size: 0.95em;
       border-radius: 8px;
       width: 60px;
       order: 1;
@@ -181,7 +192,7 @@
     }
     .input-div > button:disabled {
       background: #ccc;
-      color: #666;
+      color: #999;
     }
     /* placeholder text */
     [contenteditable=true]:empty:not(:focus):before{

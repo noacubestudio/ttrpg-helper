@@ -52,8 +52,26 @@ Field 5
 - More text
 - Even more text
 `;
+
+// wip, potential syntax:
+// color red
+// tab Another Tab 
+// # Another Title
+// 
+// / Field 4
+// - 4
+// - some
+// -
+// - text
+// 
+// = Some Formula
+// set field Field 1
+// add 2
+
+
 let current_tab_index = 0;
-const FIELD_PROPERTIES = ["max", "min", "step"];
+const BUILTIN_WORDS = ["min", "max", "step", "color"];
+//const BUILTIN_GROUPS = ["title", "tab", "h"];
 
 // initial setup
 loadText();
@@ -117,6 +135,52 @@ function modifiedText(event) {
 
 function structureFromText(text) {
 
+  // WIP
+
+  // // split by lines and then by ; ... a line not starting with - is a new group
+  // const groups = [];
+  // text.split("\n").forEach(line => {
+  //   line = line.trim();
+  //   if (line.startsWith("-")) {
+  //     line = line.slice(1); // remove leading dash
+  //     //groups[groups.length - 1].push('__NEWLINE__');
+  //     if (line.length == 0) {
+  //       groups[groups.length - 1].push('');
+  //     }
+  //   } else {
+  //     groups.push([]); // start a new group
+  //   }
+  //   line.split(";").forEach((item, index) => {
+  //     item = item.trim();
+  //     if (index > 0) {
+  //       groups[groups.length - 1].push(';');
+  //     }
+  //     if (item.length > 0) {
+  //       const propertyName = item.split("=")[0].trim();
+  //       const propertyValue = item.split("=")[1]?.trim();
+  //       if ((BUILTIN_WORDS.includes(propertyName) || BUILTIN_GROUPS.includes(propertyName)) && propertyValue) {
+  //         groups[groups.length - 1].push({[propertyName]: propertyValue});
+  //       } else {
+  //         groups[groups.length - 1].push(item);
+  //       } 
+  //     }
+  //   });
+  // });
+
+  // console.log(JSON.stringify(groups, null, 2));
+  // return groups;
+
+  // // data now looks like this:
+  // // [ [group1], [group2], [group3], ... ] 
+  // // where each group is a list of statements
+  // // the initial statement is either a field name or some kind of special builtin
+  // // builtins can also show up later and usually require a follow up statement that is the corresponding value
+
+  // // turn it into a structure:
+  // // [ {type: 'field', name: 'Field', contents: [
+  // //     {type: 'step', value: 2},
+  // // ] } ]
+
   function parseLines(text) {
     const groups = [];
   
@@ -157,7 +221,7 @@ function structureFromText(text) {
         group.slice(1).forEach(line => {
           line = line.trim();
           const firstWord = line.split(" ")[0];
-          if (FIELD_PROPERTIES.includes(firstWord)) {
+          if (BUILTIN_WORDS.includes(firstWord)) {
             fields[firstLine][firstWord] = line.slice(firstWord.length + 1);
           } else {
             fields[firstLine].content.push(line);
@@ -177,9 +241,6 @@ function structureFromText(text) {
 
 
 function elsFromText() {
-  // jump to the top of the page
-  window.scrollTo(0, 0);
-
   const div = document.getElementById("generated");
   const structure = structureFromText(current_text);
 
@@ -206,6 +267,7 @@ function elsFromText() {
       tabButton.onclick = function(e) {
         e.preventDefault();
         current_tab_index = tabIndex;
+        window.scrollTo(0, 0);
         elsFromText();
       };
       tabDiv.appendChild(tabButton);
@@ -448,7 +510,7 @@ function updateText(text, fieldname, value) {
   previousLines.forEach((line, index) => {
     const isNested = line.startsWith("-") || line == "-";
     const isFinalLine = index == previousLines.length - 1;
-    const isProperty = FIELD_PROPERTIES.includes(line.split(" ")[1]);
+    const isProperty = BUILTIN_WORDS.includes(line.split(" ")[1]);
 
     if (!isNested && line.trim() == fieldname) {
       // found the field to update
